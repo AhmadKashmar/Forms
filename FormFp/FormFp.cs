@@ -14,6 +14,9 @@ namespace conc.FormFp
         public FormFp()
         {
             InitializeComponent();
+            SerialNo = Serpers = 0;
+            SerialNumberLabel.Text += " " + SerialNo.ToString();
+            SerpersLabel.Text += " " + Serpers.ToString();
         }
 
         // TODO read from Mnasser02's form
@@ -22,6 +25,8 @@ namespace conc.FormFp
             InitializeComponent();
             SerialNo = CallingForm.SerialNo;
             Serpers = CallingForm.Serpers;
+            SerialNumberLabel.Text = SerialNo.ToString();
+            SerpersLabel.Text = Serpers.ToString();
         }
 
         private void ResetImages()
@@ -78,13 +83,13 @@ namespace conc.FormFp
                 await Task.Run(async () =>
                 {
                     using InvEntities context = new();
-                    var imageFpOrNull = context.ImageFps.Find(typeof(ImageFp), SerialNo, Serpers);
+                    var imageFpOrNull = context.Find(typeof(ImageFp), SerialNo, Serpers);
                     if (imageFpOrNull == null)
                     {
                         MessageBox.Show("Entry not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    ImageFp imageFp = imageFpOrNull;
+                    ImageFp imageFp = (ImageFp)imageFpOrNull;
                     imageFp.Fpleft = await ImageToByte(LeftFp.Image);
                     imageFp.Fpright = await ImageToByte(RightFp.Image);
                     context.Update(imageFp);
@@ -103,13 +108,13 @@ namespace conc.FormFp
             await Task.Run(() =>
            {
                using InvEntities context = new();
-               var imageFpOrNull = context.ImageFps.Find(typeof(ImageFp), SerialNo, Serpers);
+               var imageFpOrNull = context.Find(typeof(ImageFp), SerialNo, Serpers);
                if (imageFpOrNull == null)
                {
                    MessageBox.Show("No entry found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                    return;
                }
-               ImageFp imageFp = imageFpOrNull;
+               ImageFp imageFp = (ImageFp)imageFpOrNull;
                context.Remove(imageFp);
                context.SaveChanges();
            });
@@ -121,7 +126,7 @@ namespace conc.FormFp
             await Task.Run(() =>
                         {
                             using InvEntities context = new();
-                            var imageOrNull = context.ImageFps.Find(typeof(ImageFp), SerialNo, Serpers);
+                            var imageOrNull = context.Find(typeof(ImageFp), SerialNo, Serpers);
                             if (imageOrNull == null)
                             {
                                 ResetImages();
@@ -129,7 +134,7 @@ namespace conc.FormFp
                             }
                             else
                             {
-                                ImageFp imageFp = imageOrNull;
+                                ImageFp imageFp = (ImageFp)imageOrNull;
                                 LeftFp.Image = ImageFromBytes(imageFp.Fpleft!).Result;
                                 RightFp.Image = ImageFromBytes(imageFp.Fpright!).Result;
                             }

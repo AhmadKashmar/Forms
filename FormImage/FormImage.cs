@@ -12,6 +12,9 @@ namespace conc.FormImage
         public FormImage()
         {
             InitializeComponent();
+            SerialNo = Serpers = 0;
+            SerialNumber.Text += " " + SerialNo.ToString();
+            Person.Text += " " + SerialNo.ToString();
         }
 
         public FormImage(FormImage CallingForm)
@@ -19,6 +22,8 @@ namespace conc.FormImage
             InitializeComponent();
             this.SerialNo = CallingForm.SerialNo;
             this.Serpers = CallingForm.Serpers;
+            SerialNumber.Text += " " + SerialNo.ToString();
+            Person.Text += " " + SerialNo.ToString();
         }
 
         private void ResetImages()
